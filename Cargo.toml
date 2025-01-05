@@ -1,6 +1,6 @@
 [package]
 name = "daily_exp_sum"
-version = "0.2.0"
+version = "0.0.8"
 edition = "2021"
 
 [dependencies]
