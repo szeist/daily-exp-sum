@@ -72,17 +72,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     root.present()?;
   
     #[cfg(target_os = "windows")]
-    {
-        let image_path: String = image_file.display().to_string();
-    }
+    let image_path: String = image_file.display().to_string();
+    
 
     wallpaper::set_from_path(&image_file.display().to_string())?;
     wallpaper::set_mode(wallpaper::Mode::Center)?;
   
     #[cfg(target_os = "windows")]
-    {
-        let _ = set_windows_lock_screen(image_path)?;
-    }
+    let _ = set_windows_lock_screen(image_path)?;
 
     Ok(())
 }
