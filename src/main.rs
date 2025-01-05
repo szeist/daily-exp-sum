@@ -3,6 +3,7 @@ use std::f64::consts::PI;
 use chrono::prelude::*;
 use plotters::{coord::Shift, prelude::*};
 use wallpaper;
+use clap::Command;
 #[cfg(target_os = "windows")]
 use {
     windows::System::UserProfile::LockScreen,
@@ -59,6 +60,10 @@ fn plot_partial_sums(
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let _ = Command::new("daily-exp-sum")
+        .version(env!("CARGO_PKG_VERSION"))
+        .get_matches();
+
     let now = Local::now().naive_local().date();
     let partial_sums = get_current_partial_sums(&now);
 
@@ -70,7 +75,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     plot_partial_sums(&root, &partial_sums)?;
   
     root.present()?;
-  
+    
     wallpaper::set_from_path(&image_file.display().to_string())?;
     wallpaper::set_mode(wallpaper::Mode::Center)?;
   
@@ -84,7 +89,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 #[cfg(target_os = "windows")]
-fn set_windows_lock_screen(image_path: String) ->Result<(), Box<dyn std::error::Error>> {
+fn set_windows_lock_screen(image_path: String) -> Result<(), Box<dyn std::error::Error>> {
     use std::error::Error;
 
     let file: StorageFile = StorageFile::GetFileFromPathAsync(&HSTRING::from(image_path))?.get()?;
@@ -92,6 +97,6 @@ fn set_windows_lock_screen(image_path: String) ->Result<(), Box<dyn std::error::
     let result = LockScreen::SetImageFileAsync(&file)?;
     match result.get() {
         Ok(_) => Ok(()),
-        Err(e) => Err(Box::<dyn Error>::from(e)),   
+        Err(e) => Err(Box::<dyn Error>::from(e)),
     }
 }
