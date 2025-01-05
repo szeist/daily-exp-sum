@@ -4,17 +4,9 @@ on:
       - v*
 
 jobs:
-  release:
-    runs-on: windows-latest
+  create-release:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          toolchain: stable
- 
-      - name: Build
-        run: cargo build --release --verbose
-
       - name: Create Release
         uses: actions/create-release@v1
         id: create_release
@@ -25,13 +17,47 @@ jobs:
           release_name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
-      
+
+  release-windows:
+    runs-on: windows-latest
+    needs: create-release
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+ 
+      - name: Build
+        run: cargo build --release --verbose
+
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
           asset_path: ./target/release/daily_exp_sum.exe
           asset_name: daily_exp_sum.exe
+          asset_content_type: application/octet-stream
+
+  release-linux:
+    runs-on: ubuntu-latest
+    needs: create-release
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Build
+        run: cargo build --release --verbose
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./target/release/daily_exp_sum
+          asset_name: daily_exp_sum
           asset_content_type: application/octet-stream
