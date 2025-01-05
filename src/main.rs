@@ -71,7 +71,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
   
     root.present()?;
   
-    let image_path: String = image_file.display().to_string();
+    #[cfg(target_os = "windows")]
+    {
+        let image_path: String = image_file.display().to_string();
+    }
 
     wallpaper::set_from_path(&image_file.display().to_string())?;
     wallpaper::set_mode(wallpaper::Mode::Center)?;
