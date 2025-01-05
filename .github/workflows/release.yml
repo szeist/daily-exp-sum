@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create Release
-        uses: actions/create-release@v1
+        uses: actions/create-release@v1.1.3
         id: create_release
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_ACCESS_TOKEN }}
@@ -48,6 +48,9 @@ jobs:
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: stable
+
+      - name: Install Dependencies
+        run: sudo apt-get update && sudo apt-get install -y libfontconfig-dev
 
       - name: Build
         run: cargo build --release --verbose
