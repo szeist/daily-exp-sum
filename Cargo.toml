@@ -1,5 +1,8 @@
 [package]
 name = "daily_exp_sum"
+description = "Set wallpaper based on the current date"
+license = "MIT"
+homepage = "https://github.com/szeist/daily-exp-sum"
 version = "0.0.8"
 edition = "2021"
 
